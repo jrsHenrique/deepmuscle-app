@@ -4,10 +4,10 @@ import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importação do Bootstrap
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme.js'; // Importa o tema personalizado
-import { useClient } from './utils/request.jsx';
+import { QueryClient } from '@tanstack/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-const client = useClient();
+const client = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
