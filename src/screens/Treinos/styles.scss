@@ -1,0 +1,53 @@
+.treinos{
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	// flex-direction: column;
+	flex-wrap: wrap;	
+	gap: 5px;
+
+	.treino-card {
+		width: 49%;
+		padding: 6px;
+		color: #F5F5F5;
+		margin-top: 40px;
+		border-radius: 30px;
+		background-color: rgba(101, 145, 181, .63);
+
+		img {
+				margin-right: 5px;
+				margin-bottom: 3px;
+			}
+
+		.item-up {
+			padding: 4px 10px;
+			margin-bottom: 10px;
+			background-color: #6591B5;
+			border-radius: 15px;
+			color: #F5F5F5;
+		}
+
+		.item-date {
+			padding: 4px 7px;
+			margin-bottom: 10px;
+			background-color: #6591B5;
+			border-radius: 15px;
+			color: #F5F5F5;
+			font-size: medium;
+			min-width: 60px;
+			height: 32px;
+			text-align: center;
+		}
+
+		.item-card{
+			gap: 8px;
+		}
+		
+
+		.treino-card {
+			padding: 8px 30px;
+			border-radius: 15px;
+			color: #F5F5F5;
+		}
+	}
+}
