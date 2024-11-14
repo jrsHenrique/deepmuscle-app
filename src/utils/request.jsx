@@ -5,6 +5,8 @@ import * as React from "react"
 
 export const axiosDefaults = Axios.defaults
 
+Axios.defaults.baseURL = "https://127.0.0.1:8000/"
+
 function getErrorMessageComponent(error)
 {
 	return ({ className = 'f14 mt-3 red text-center' }) =>

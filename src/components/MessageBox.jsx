@@ -7,13 +7,15 @@ const MessageBox = (props) =>
 {
 	const textColor = useColorModeValue('navy.700', 'white')
 	const { output } = props
+
 	return (
 		<CustomCard
 			display={output ? 'flex' : 'none'}
 			px="22px !important"
 			pl="22px !important"
 			color={textColor}
-			minH="450px"
+			height="240px"
+			overflowY="auto"
 			fontSize={{ base: 'sm', md: 'md' }}
 			lineHeight={{ base: '24px', md: '26px' }}
 			fontWeight="500"

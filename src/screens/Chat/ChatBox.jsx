@@ -1,5 +1,5 @@
 import MessageBox from "../../components/MessageBox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import
 {
 	Accordion,
@@ -17,10 +17,14 @@ import
 	useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
+import { useGet, usePost } from "../../utils/request";
+import { SSE } from '../../utils/sse';
+import Axios from "axios";
+import Bg from '/assets/bg-image.png';
+import { Link } from 'react-router-dom';
 
 const ChatBox = () =>
 {
-	const [output, setOutput] = useState('');
 	const [inputOnSubmit, setInputOnSubmit] = useState('');
 	const [inputCode, setInputCode] = useState('');
 	const [outputCode, setOutputCode] = useState('');
@@ -45,141 +49,299 @@ const ChatBox = () =>
 		{ color: 'gray.500' },
 		{ color: 'whiteAlpha.600' },
 	);
+	console.log(outputCode);
+	function Stream(updateCallback)
+	{
+		var last_response_len = 0;
+		setInputOnSubmit(inputCode);
+		var xhttp = new XMLHttpRequest();
+		xhttp.onprogress = function ()
+		{
+			var responseText = xhttp.response.substr(last_response_len);
+			const events = responseText.split("\r\n\r\n").filter(a => a !== "");
+			events.forEach(event =>
+			{
+				const event_list = event.split("\r\n");
+				const event_type = event_list[0].split(": ")[1];
+				const data = event_list[1] ? event_list[1].split(": ")[1] : null;
+				if (event_type === "end")
+				{
+					setOutputCode(cur => cur + "\n\n");
+					setLoading(false);
+					xhttp.abort();
+					return;
+				}
+				if (event_type === "data")
+				{
+					setLoading(true);
+					updateCallback(data);
+				}
+			})
+		};
+		xhttp.onerror = function ()
+		{
+			setLoading(false);
+			xhttp.abort();
+		};
+		xhttp.open("POST", "http://127.0.0.1:8000/rag_conversation/stream", true);
+		setLoading(true);
+		xhttp.send(JSON.stringify({ "input": { "chat_history": [], "question": inputCode } }));
+	}
+
+	function onUpdate(data)
+	{
+		const modifiedData = data.slice(1, -1);
+		setOutputCode(cur => cur + modifiedData);
+	}
+
+	useEffect(() =>
+	{
+
+	}, []);
+
 
 	const handleTranslate = async () =>
 	{
+		Stream(onUpdate);
 	};
 
 	const handleChange = (Event) =>
 	{
-		setOutput(Event.target.value);
+		setInputCode(Event.target.value);
 	};
 
 
 	return (
-		<>
-
+		<Flex
+			w="100%"
+			pt={{ base: '70px', md: '0px' }}
+			direction="column"
+			position="relative"
+		>
+			<Img
+				src={Bg.src}
+				position={'absolute'}
+				w="350px"
+				left="50%"
+				top="50%"
+				transform={'translate(-50%, -50%)'}
+			/>
 			<Flex
 				direction="column"
-				w="100%"
 				mx="auto"
-				display={output ? 'flex' : 'none'}
-				mb={'auto'}
+				w={{ base: '100%', md: '100%', xl: '100%' }}
+				minH={{ base: '75vh', '2xl': '85vh' }}
+				maxW="1000px"
 			>
-				<Flex w="100%" align={'center'} mb="10px">
-					{/* <Flex
-						borderRadius="full"
-						justify="center"
-						align="center"
-						bg={'transparent'}
-						border="1px solid"
-						borderColor={borderColor}
-						me="20px"
-						h="40px"
-						minH="40px"
-						minW="40px"
+				{/* Model Change */}
+				<Flex direction={'column'} w="100%" mb={outputCode ? '20px' : 'auto'}>
+					<Flex
+						mx="auto"
+						zIndex="2"
+						w="max-content"
+						mb="20px"
+						borderRadius="60px"
 					>
-						<Icon
-							as={MdPerson}
-							width="20px"
-							height="20px"
-							color={brandColor}
-						/>
-					</Flex> */}
-					{/* <Flex
-						p="22px"
-						border="1px solid"
-						borderColor={borderColor}
-						borderRadius="14px"
-						w="100%"
-						zIndex={'2'}
-					>
-						<Text
+						<Flex
+							cursor={'pointer'}
+							transition="0.3s"
+							justify={'center'}
+							align="center"
+							bg={model === 'gpt-4o' ? buttonBg : 'transparent'}
+							w="174px"
+							h="70px"
+							boxShadow={model === 'gpt-4o' ? buttonShadow : 'none'}
+							borderRadius="14px"
 							color={textColor}
-							fontWeight="600"
-							fontSize={{ base: 'sm', md: 'md' }}
-							lineHeight={{ base: '24px', md: '26px' }}
+							fontSize="18px"
+							fontWeight={'700'}
+							onClick={() => setModel('gpt-4o')}
 						>
-							{inputOnSubmit}
-						</Text>
-						<Icon
-							cursor="pointer"
-							as={MdEdit}
-							ms="auto"
-							width="20px"
-							height="20px"
-							color={gray}
-						/>
-					</Flex> */}
+							<Flex
+								borderRadius="full"
+								justify="center"
+								align="center"
+								bg={bgIcon}
+								me="10px"
+								h="39px"
+								w="39px"
+							>
+								<Icon
+									as={MdAutoAwesome}
+									width="20px"
+									height="20px"
+									color={iconColor}
+								/>
+							</Flex>
+							GPT-4o
+						</Flex>
+						<Flex
+							cursor={'pointer'}
+							transition="0.3s"
+							justify={'center'}
+							align="center"
+							bg={model === 'gpt-3.5-turbo' ? buttonBg : 'transparent'}
+							w="164px"
+							h="70px"
+							boxShadow={model === 'gpt-3.5-turbo' ? buttonShadow : 'none'}
+							borderRadius="14px"
+							color={textColor}
+							fontSize="18px"
+							fontWeight={'700'}
+							onClick={() => setModel('gpt-3.5-turbo')}
+						>
+							<Flex
+								borderRadius="full"
+								justify="center"
+								align="center"
+								bg={bgIcon}
+								me="10px"
+								h="39px"
+								w="39px"
+							>
+								<Icon
+									as={MdBolt}
+									width="20px"
+									height="20px"
+									color={iconColor}
+								/>
+							</Flex>
+							GPT-3.5
+						</Flex>
+					</Flex>
 				</Flex>
-				<Flex w="100%">
-					{/* <Flex
-						borderRadius="full"
-						justify="center"
-						align="center"
-						bg={'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
-						me="20px"
-						h="40px"
-						minH="40px"
-						minW="40px"
-					>
-						<Icon
-							as={MdAutoAwesome}
-							width="20px"
-							height="20px"
-							color="white"
-						/>
-					</Flex> */}
-					<MessageBox output={output} />
-				</Flex>
-			</Flex>
-			{/* Chat Input */}
-			<Flex
-				w="100%"
-				ms={{ base: '0px', xl: '20px' }}
-				mt="20px"
-				justifySelf={'flex-end'}
-			>
-				<Input
-					minH="54px"
-					h="100%"
-					border="1px solid"
-					borderColor={borderColor}
-					borderRadius="45px"
-					p="15px 20px"
-					me="10px"
-					fontSize="sm"
-					fontWeight="500"
-					_focus={{ borderColor: 'none' }}
-					color={inputColor}
-					_placeholder={placeholderColor}
-					placeholder="Digite sua dúvida aqui..."
-					onChange={handleChange}
-				/>
-				<Button
-					variant="primary"
-					py="20px"
-					px="16px"
-					fontSize="sm"
-					borderRadius="45px"
-					ms="auto"
-					w={{ base: '160px', md: '210px' }}
-					h="54px"
-					_hover={{
-						boxShadow:
-							'0px 21px 27px -10px rgba(96, 60, 200, 0.48) !important',
-						bg: 'linear-gradient(15.46deg, #4A22E1 26.3%, #7B5AFF 86.4%) !important',
-						_disabled: {
-							bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-						},
-					}}
-					onClick={handleTranslate}
-					isLoading={loading ? true : false}
+				<Flex
+					direction="column"
+					w="100%"
+					mx="auto"
+					display={outputCode ? 'flex' : 'none'}
+					mb={'auto'}
 				>
-					Enviar
-				</Button>
+					<Flex w="100%" align={'center'} mb="10px">
+						<Flex
+							borderRadius="full"
+							justify="center"
+							align="center"
+							bg={'transparent'}
+							border="1px solid"
+							borderColor={borderColor}
+							me="20px"
+							h="40px"
+							minH="40px"
+							minW="40px"
+						>
+							<Icon
+								as={MdPerson}
+								width="20px"
+								height="20px"
+								color={brandColor}
+							/>
+						</Flex>
+						<Flex
+							p="22px"
+							border="1px solid"
+							borderColor={borderColor}
+							borderRadius="14px"
+							w="100%"
+							zIndex={'2'}
+						>
+							<Text
+								color={textColor}
+								fontWeight="600"
+								fontSize={{ base: 'sm', md: 'md' }}
+								lineHeight={{ base: '24px', md: '26px' }}
+							>
+								{inputOnSubmit}
+							</Text>
+							<Icon
+								cursor="pointer"
+								as={MdEdit}
+								ms="auto"
+								width="20px"
+								height="20px"
+								color={gray}
+							/>
+						</Flex>
+					</Flex>
+					<Flex w="100%">
+						<Flex
+							borderRadius="full"
+							justify="center"
+							align="center"
+							bg={'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
+							me="20px"
+							h="40px"
+							minH="40px"
+							minW="40px"
+						>
+							<Icon
+								as={MdAutoAwesome}
+								width="20px"
+								height="20px"
+								color="white"
+							/>
+						</Flex>
+						<MessageBox output={outputCode} />
+					</Flex>
+				</Flex>
+				{/* Chat Input */}
+				<Flex
+					ms={{ base: '0px', xl: '60px' }}
+					mt="20px"
+					justifySelf={'flex-end'}
+				>
+					<Input
+						minH="54px"
+						h="100%"
+						border="1px solid"
+						borderColor={borderColor}
+						borderRadius="45px"
+						p="15px 20px"
+						me="10px"
+						fontSize="sm"
+						fontWeight="500"
+						_focus={{ borderColor: 'none' }}
+						color={inputColor}
+						_placeholder={placeholderColor}
+						placeholder="Digite sua dúvida aqui ..."
+						onChange={handleChange}
+					/>
+					<Button
+						variant="primary"
+						py="20px"
+						px="16px"
+						fontSize="sm"
+						borderRadius="45px"
+						ms="auto"
+						w={{ base: '160px', md: '210px' }}
+						h="54px"
+						_hover={{
+							boxShadow:
+								'0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
+							bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+							_disabled: {
+								bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+							},
+						}}
+						onClick={handleTranslate}
+						isLoading={loading ? true : false}
+					>
+						Enviar
+					</Button>
+				</Flex>
+
+				<Flex
+					justify="center"
+					mt="20px"
+					direction={{ base: 'column', md: 'row' }}
+					alignItems="center"
+				>
+					<Text fontSize="xs" textAlign="center" color={gray}>
+						Esse modelo usa modelos da OPENAI para responder suas perguntas, bem como o RAG para conversas mais longas.
+					</Text>
+				</Flex>
 			</Flex>
-		</>
+		</Flex>
 	);
 }
 
