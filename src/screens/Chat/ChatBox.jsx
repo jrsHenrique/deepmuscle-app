@@ -134,12 +134,12 @@ const ChatBox = () =>
 				maxW="1000px"
 			>
 				{/* Model Change */}
-				<Flex direction={'column'} w="100%" mb={outputCode ? '20px' : 'auto'}>
+				<Flex direction={'column'} w="100%" mb={outputCode ? '20px' : '10px'}>
 					<Flex
 						mx="auto"
 						zIndex="2"
 						w="max-content"
-						mb="20px"
+						mt="20px"
 						borderRadius="60px"
 					>
 						<Flex
@@ -337,7 +337,7 @@ const ChatBox = () =>
 					alignItems="center"
 				>
 					<Text fontSize="xs" textAlign="center" color={gray}>
-						Esse modelo usa modelos da OPENAI para responder suas perguntas, bem como o RAG para conversas mais longas.
+						Esse chat utiliza da técnica RAG com o GPT, utilizando documentos de especialistas em educação física.
 					</Text>
 				</Flex>
 			</Flex>
