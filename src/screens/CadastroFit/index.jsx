@@ -4,10 +4,14 @@ import { useDummyRequest } from "../../utils/request";
 import "./styles.scss"; // Inclua o estilo adequado
 import Loading from "../../components/Loading";
 import { Link } from "react-router-dom";
+import { useGet, usePost } from "../../utils/request";
 
 const CadastroFit = ({ setAuthenticated, user }) => {
+
+  const {isLoading, mutate} = usePost({url:"users/register_details"})
+
   const navigate = useNavigate();
-  const { isLoading } = useDummyRequest();
+  //const { isLoading } = useDummyRequest();
   
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
@@ -23,7 +27,14 @@ const CadastroFit = ({ setAuthenticated, user }) => {
     e.preventDefault();
     // Aqui você pode adicionar a lógica para salvar os dados (enviar para o backend, etc.)
     // Após salvar, redireciona para a tela de perfil com as informações fornecidas
-    navigate("/profile", { state: { height, weight, age, gender, exerciseRegularity, goal } });
+    mutate({"height": height, "weight": weight, "age" : age, "fitness_level": exerciseRegularity, "gender": gender},
+      {
+        onSuccess: (data) => {
+          console.log(data)
+        }
+      }
+    )
+    // navigate("/profile", { state: { height, weight, age, gender, exerciseRegularity, goal } });
   };
 
   return (

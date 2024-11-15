@@ -5,7 +5,7 @@ import * as React from "react"
 
 export const axiosDefaults = Axios.defaults
 
-Axios.defaults.baseURL = "https://127.0.0.1:8000/"
+Axios.defaults.baseURL = "http://127.0.0.1:8000/"
 
 function getErrorMessageComponent(error)
 {
@@ -24,7 +24,7 @@ const hour = 60 * 60 * 1000
 
 function getSchema(url, params = {}, schema, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async () => Axios.get(url, { params: params, baseURL })
 		.then(res => res.data).then(data => schema?.parse(data) ?? data)
 }
@@ -53,7 +53,7 @@ export function useGet({
 
 function post(url, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.post(url, { params: params, ...params }, { baseURL })
 		.then(res => res.data).catch(error =>
 		{
@@ -67,7 +67,7 @@ function post(url, version = 1)
 
 function postFull(url, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.post(url, { params: params, ...params }, { baseURL })
 		.catch(error =>
 		{
@@ -99,7 +99,7 @@ export function usePost({
 // PATCH
 function patch(url, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.patch(url, { params: params, ...params }, { baseURL })
 		.then(res => res.data).catch(error =>
 		{
@@ -113,7 +113,7 @@ function patch(url, version = 1)
 
 function patchFull(url, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.patch(url, { params: params, ...params }, { baseURL })
 		.catch(error =>
 		{
@@ -149,7 +149,7 @@ export function usePatch({
 // PUT
 function put(url, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.put(url, { params: params, ...params }, { baseURL })
 		.then(res => res.data).catch(error =>
 		{
@@ -163,7 +163,7 @@ function put(url, version = 1)
 
 function putFull(url, version = 1)
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.put(url, { params: params, ...params }, { baseURL })
 		.catch(error =>
 		{
@@ -194,7 +194,7 @@ export function usePut({
 
 const _delete = (url, version = 1) =>
 {
-	const baseURL = Axios.defaults.baseURL + (version === 1 ? 'api/v1/' : 'api/v2/')
+	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.delete(url, { ...params, baseURL }).then(res => res.data)
 }
 
