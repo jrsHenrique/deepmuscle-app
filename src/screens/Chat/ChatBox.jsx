@@ -96,7 +96,10 @@ const ChatBox = () =>
 
 	useEffect(() =>
 	{
-
+		return () =>
+		{
+			setOutputCode('');
+		};
 	}, []);
 
 
