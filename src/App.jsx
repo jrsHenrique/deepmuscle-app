@@ -8,6 +8,7 @@ import Navbar from './screens/Home'
 import TreinoDia from './screens/Home/TreinoDia'
 import Treinos from './screens/Treinos/Treinos'
 import ChatBox from './screens/Chat/ChatBox'
+import CadastroFit from './screens/CadastroFit'
 
 
 function App()
@@ -29,12 +30,12 @@ function App()
               <Route path='home' index element={<TreinoDia />} />
               <Route path='treinos' element={<Treinos />} />
               <Route path='chat' element={<ChatBox />} />
-              <Route path='conta' element={<h1>Contact</h1>} />
+              <Route path='CadastroFit' element={<CadastroFit />} />
             </Route>
           }
         </Routes>
       </BrowserRouter>
-    </>
+    </> 
   )
 }
 
