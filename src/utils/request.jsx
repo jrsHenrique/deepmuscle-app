@@ -45,7 +45,7 @@ export function useGet({
 	let queryKey = [url]
 	queryKey.push(JSON.stringify(params))
 	return {
-		...useQuery < z.infer > (queryKey, getSchema(url, params, schema, version), {
+		...useQuery(queryKey, getSchema(url, params, schema, version), {
 			cacheTime: 7 * 24 * hour,
 			staleTime: 7 * 24 * hour,
 			refetchInterval: 24 * hour,
@@ -63,6 +63,10 @@ export function useGet({
 function post(url, version = 1, form_data = false)
 {
 	const baseURL = Axios.defaults.baseURL
+	if(form_data)
+	{
+		return async (params) => Axios.post(url, params, { headers: { "Content-Type": "multipart/form-data" } }).then(res => res.data)
+	}
 	return async (params) => Axios.post(url, { params: params, ...params }, { baseURL })
 		.then(res => res.data).catch(error =>
 		{

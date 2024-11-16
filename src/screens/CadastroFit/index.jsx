@@ -9,6 +9,7 @@ import { useGet, usePost } from "../../utils/request";
 const CadastroFit = ({ setAuthenticated, user }) => {
 
   const {isLoading, mutate} = usePost({url:"users/register_details"})
+  const {isLoading:isLoadingUserInfo, data} = useGet({url:"users/get_user_infos"})
 
   const navigate = useNavigate();
   //const { isLoading } = useDummyRequest();
@@ -39,8 +40,8 @@ const CadastroFit = ({ setAuthenticated, user }) => {
 
   return (
     <div className="signup-page w-100">
-      <Loading skeleton={{ height: 150 }} isLoading={isLoading}>
-        <Header user={user} />
+      <Loading skeleton={{ height: 150 }} isLoading={isLoadingUserInfo}>
+        <Header user={data} />
       </Loading>
       <Loading skeleton={{ height: 150, count: 2 }} isLoading={isLoading}>
         <form onSubmit={submitHandler}>
@@ -128,12 +129,14 @@ const CadastroFit = ({ setAuthenticated, user }) => {
 };
 
 const Header = ({ user }) => {
+
+
   return (
     <>
       <img src="/assets/images/register.svg" alt="" className="register" />
       <div className="content-init">
         <h1 className="f32 black fw-700 fw-bold text-start">
-          {`Olá, Luís Augusto!`}
+          {`Olá, ${user.full_name}`}
         </h1>
       </div>
     </>
