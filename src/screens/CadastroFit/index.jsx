@@ -4,10 +4,15 @@ import { useDummyRequest } from "../../utils/request";
 import "./styles.scss"; // Inclua o estilo adequado
 import Loading from "../../components/Loading";
 import { Link } from "react-router-dom";
+import { useGet, usePost } from "../../utils/request";
 
 const CadastroFit = ({ setAuthenticated, user }) => {
+
+  const {isLoading, mutate} = usePost({url:"users/register_details"})
+  const {isLoading:isLoadingUserInfo, data} = useGet({url:"users/get_user_infos"})
+
   const navigate = useNavigate();
-  const { isLoading } = useDummyRequest();
+  //const { isLoading } = useDummyRequest();
   
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
@@ -23,13 +28,20 @@ const CadastroFit = ({ setAuthenticated, user }) => {
     e.preventDefault();
     // Aqui você pode adicionar a lógica para salvar os dados (enviar para o backend, etc.)
     // Após salvar, redireciona para a tela de perfil com as informações fornecidas
-    navigate("/profile", { state: { height, weight, age, gender, exerciseRegularity, goal } });
+    mutate({"height": height, "weight": weight, "age" : age, "fitness_level": exerciseRegularity, "gender": gender},
+      {
+        onSuccess: (data) => {
+          console.log(data)
+        }
+      }
+    )
+    // navigate("/profile", { state: { height, weight, age, gender, exerciseRegularity, goal } });
   };
 
   return (
     <div className="signup-page w-100">
-      <Loading skeleton={{ height: 150 }} isLoading={isLoading}>
-        <Header user={user} />
+      <Loading skeleton={{ height: 150 }} isLoading={isLoadingUserInfo}>
+        <Header user={data} />
       </Loading>
       <Loading skeleton={{ height: 150, count: 2 }} isLoading={isLoading}>
         <form onSubmit={submitHandler}>
@@ -117,12 +129,14 @@ const CadastroFit = ({ setAuthenticated, user }) => {
 };
 
 const Header = ({ user }) => {
+
+
   return (
     <>
       <img src="/assets/images/register.svg" alt="" className="register" />
       <div className="content-init">
         <h1 className="f32 black fw-700 fw-bold text-start">
-          {`Olá, Luís Augusto!`}
+          {`Olá, ${user.full_name}`}
         </h1>
       </div>
     </>

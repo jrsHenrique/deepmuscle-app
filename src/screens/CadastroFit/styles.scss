@@ -121,4 +121,41 @@
 			color: #000000;
 		}
 	}
+	.input-box.col-12.mb-3 {
+		display: flex;
+		flex-direction: column; /* Para organizar os elementos verticalmente */
+		align-items: center; /* Centraliza o conteúdo horizontalmente */
+		margin-bottom: 20px; /* Ajuste do espaçamento inferior */
+		width: 100%; /* Garante que ocupe a largura total disponível */
+		
+		input {
+		  width: 90%; /* Ajuste da largura para um tamanho confortável */
+		  max-width: 400px; /* Limite máximo de largura */
+		  height: 45px; /* Altura dos campos */
+		  padding: 10px; /* Espaçamento interno */
+		  font-size: 16px; /* Texto legível */
+		  border: 1px solid #ccc; /* Borda sutil */
+		  border-radius: 5px; /* Bordas arredondadas */
+		  outline: none; /* Remove o contorno padrão */
+		  transition: border-color 0.3s ease; /* Suaviza a mudança de cor da borda */
+		}
+		select{
+			width: 90%; /* Ajuste da largura para um tamanho confortável */
+		  max-width: 350px; /* Limite máximo de largura */
+		  height: 45px; /* Altura dos campos */
+		  padding: 10px; /* Espaçamento interno */
+		  font-size: 16px; /* Texto legível */
+		  border: 1px solid #ccc; /* Borda sutil */
+		  border-radius: 5px; /* Bordas arredondadas */
+		  outline: none; /* Remove o contorno padrão */
+		  transition: border-color 0.3s ease; /* Suaviza a mudança de cor da borda */
+		}
+	  
+		input:focus,
+		select:focus {
+		  border-color: #007bff; /* Cor da borda ao focar no campo */
+		}
+	  }
+	  
 }
+

@@ -1,47 +1,52 @@
-import Modal from "react-bootstrap/Modal"
+import Modal from "react-bootstrap/Modal";
 
-export const ModalDescricao = ({ show, onHide, explanation, extractedText }) =>
-{
-	return (
-		<Modal show={show} onHide={onHide} centered>
-			<Modal.Body className="modal-descricao">
-				<div className="d-flex align-items-center w-10 gap-1 justify-content-center">
-					<button className="btn-modal bg-blue  white w-50 mt-4" onClick={onHide}>
-						Baixe o documento original
-					</button>
-					<button className="btn-modal bg-blue  white w-50 mt-4" onClick={onHide}>
-						Baixe o documento com as suas consultas
-					</button>
-				</div>
-				<div className="d-flex align-items-center w-10 justify-content-center">
-					<div className="text-scrollable">
-						<span className=" f14 fw-400 blue text-start">Texto Extraído <br></br> {extractedText}</span>
-					</div>
-					<div className="text-scrollable">
-						<span className="f14 fw-400 blue text-start">Explicação <br></br> {explanation ? explanation : "Solicite uma explicação no botão embaixo de upload"}</span>
-					</div>
-				</div>
-				<button className="btn-modal bg-blue  white w-50 mt-4" onClick={onHide}>
-					OK
-				</button>
-			</Modal.Body>
-		</Modal>)
-}
+export const ModalDetalhes = ({ show, onHide, description, treinos }) => {
+	  
 
-// type useModalTitleProps = {
-//   onHide: () => void
-//   image: string
-//   title: string
+  return (
+    <Modal show={show} onHide={onHide} centered>
+      <Modal.Body className="modal-descricao">
+        {/* Descrição do Treino */}
+        <div className="text-block mb-4">
+          <h5 className="text-title">Descrição do Treino</h5>
+          <p className="text-content">
+            {description || "Descrição geral do treino não disponível."}
+          </p>
+        </div>
 
-//   color: string
-// }
+        {/* Tabela com os Treinos */}
+        {treinos && treinos.length > 0 ? (
+          <div className="table-responsive">
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Exercício</th>
+                  <th>Séries</th>
+                  <th>Repetições</th>
+                </tr>
+              </thead>
+              <tbody>
+                {treinos.map((treino, index) => (
+                  <tr key={index}>
+                    <td>{treino.exercicio}</td>
+                    <td>{treino.series}</td>
+                    <td>{treino.repeticoes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-muted">Nenhum treino disponível para exibição.</p>
+        )}
 
-// function UseModalTitle({ image, title, color, onHide }: useModalTitleProps) {
-//   return (
-//     <div className="d-flex flex-column align-items-center justify-content-center">
-//       <img src="/assets/close.svg" width={12} className="btn-modal-close" onClick={onHide} />
-//       <img src={`/assets-v1/modal/${image}.svg`} alt="" />
-//       <span className={`f16 fw-500 ${color}`}>{title}</span>
-//     </div>
-//   )
-// }
+        {/* Botão OK */}
+        <div className="d-flex justify-content-center mt-4">
+          <button className="btn-modal bg-blue white w-50" onClick={onHide}>
+            OK
+          </button>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
