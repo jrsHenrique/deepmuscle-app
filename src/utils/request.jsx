@@ -7,6 +7,15 @@ export const axiosDefaults = Axios.defaults
 
 Axios.defaults.baseURL = "http://127.0.0.1:8000/"
 
+export function useShow (defaultVisibility = false) {
+	const [visible, setVisible] = useState(defaultVisibility);
+	const hide = () => setVisible(false)
+	const show = () => setVisible(true)
+	const toggle = () => setVisible(prev => !prev)
+	return { visible, show, hide, toggle }
+}
+
+
 function getErrorMessageComponent(error)
 {
 	return ({ className = 'f14 mt-3 red text-center' }) =>
