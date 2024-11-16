@@ -38,13 +38,14 @@
 
 		.eye {
 			position: absolute;
-			left: 220px;
+			left: 260px!important;
 			top: 30%;
+			cursor: pointer;
 		}
 
 		@media (max-width: 480px) {
 			.eye {
-				left: 210px;
+				left: 210px!important;
 			}
 		}
 	}

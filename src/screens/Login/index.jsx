@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Loading from "../../components/Loading";
-import { useDummyRequest } from "../../utils/request";
+import { usePost } from "../../utils/request";
+import { form } from "framer-motion/client";
 
 
 
@@ -31,18 +32,12 @@ const Login = ({ setAuthenticated }) =>
 {
 	const navigate = useNavigate()
 	const queryParams = useLocation().search
-	const isLoading = useDummyRequest()
 
 	return (
 		<Container topNav={false}>
 			<div className="login-page w-100">
-				<Loading skeleton={{ height: 80 }} isLoading={isLoading}>
-					<Header />
-				</Loading>
-				<Loading skeleton={{ height: 70, count: 2 }} isLoading={isLoading}>
-					<InputFields setAuthenticated={setAuthenticated} />
-				</Loading>
-				{/* <div className="big-line mt-5" /> */}
+				<Header />
+				<InputFields setAuthenticated={setAuthenticated} />
 				<Help />
 			</div>
 		</Container>
@@ -64,8 +59,7 @@ const Header = () =>
 
 const InputFields = ({ setAuthenticated }) =>
 {
-	// const { isLoading, mutate } = usePost({ url: 'login/', headers: true })
-	const { isLoading } = useDummyRequest()
+	const { isLoading, mutate } = usePost({ url: 'auth/login', headers: false, form_data: true })
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState(false)
@@ -73,11 +67,37 @@ const InputFields = ({ setAuthenticated }) =>
 	const [showPassword, setShowPassword] = useState(false)
 
 	const navigate = useNavigate()
-
 	let decoded_token = null
 	const loginHandler = (e) =>
 	{
-		e.preventDefault();
+		e.preventDefault()
+		if (login && password)
+		{
+			const form_data = new FormData();
+			form_data.append("username", login.trim());
+			form_data.append("password", password.trim());
+			mutate(form_data, {
+				onSuccess: (data) =>
+				{
+					console.log(data)
+					localStorage.setItem('token', data.access_token)
+					Axios.defaults.headers.common = {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${data.access_token}`
+					};
+					setAuthenticated(true)
+					navigate('/home')
+				},
+				onError: (error) =>
+				{
+					if (error.response?.status === 401)
+						setErrorAuthorization(true)
+					else
+						setError(true)
+				}
+			})
+		}
 	}
 
 	return (

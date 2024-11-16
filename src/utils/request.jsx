@@ -60,7 +60,7 @@ export function useGet({
 	};
 }
 
-function post(url, version = 1)
+function post(url, version = 1, form_data = false)
 {
 	const baseURL = Axios.defaults.baseURL
 	return async (params) => Axios.post(url, { params: params, ...params }, { baseURL })
@@ -89,11 +89,11 @@ function postFull(url, version = 1)
 }
 
 export function usePost({
-	url, additional_params = {}, headers = false, version = 1
+	url, additional_params = {}, headers = false, version = 1, form_data = false
 })
 {
 	let queryKey = [url]
-	const mutation = useMutation([url], (headers ? postFull(url, version) : post(url, version)), {
+	const mutation = useMutation([url], (headers ? postFull(url, version) : post(url, version, form_data)), {
 		retry: false,
 		...additional_params
 	})

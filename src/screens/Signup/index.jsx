@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Loading from "../../components/Loading";
-import { useDummyRequest } from "../../utils/request";
+import { usePost } from "../../utils/request";
 
 
 
@@ -30,19 +30,13 @@ const Register = ({ setAuthenticated }) =>
 {
 	const navigate = useNavigate()
 	const queryParams = useLocation().search
-	const isLoading = useDummyRequest()
 
 
 	return (
 		<Container topNav={false} centered>
 			<div className="signup-page w-100">
-				<Loading skeleton={{ height: 150 }} isLoading={isLoading}>
-					<Header />
-				</Loading>
-				<Loading skeleton={{ height: 150, count: 2 }} isLoading={isLoading}>
-					<InputFields setAuthenticated={setAuthenticated} />
-				</Loading>
-				{/* <Help /> */}
+				<Header />
+				<InputFields setAuthenticated={setAuthenticated} />
 			</div>
 		</Container>
 	)
@@ -63,8 +57,7 @@ const Header = () =>
 
 const InputFields = ({ setAuthenticated }) =>
 {
-	// const { isLoading, mutate } = usePost({ url: 'login/', headers: true })
-	const { isLoading } = useDummyRequest()
+	const { isLoading, mutate } = usePost({ url: 'auth/sign_up', headers: true })
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('')
 	const [passwordConfirmation, setPasswordConfirmation] = useState('')
@@ -72,6 +65,7 @@ const InputFields = ({ setAuthenticated }) =>
 	const [errorAuthorization, setErrorAuthorization] = useState(false)
 	const [showPassword, setShowPassword] = useState(false)
 	const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+	const [name, setName] = useState('')
 
 	const navigate = useNavigate()
 
@@ -79,6 +73,19 @@ const InputFields = ({ setAuthenticated }) =>
 	const loginHandler = (e) =>
 	{
 		e.preventDefault();
+		if (login && password && name)
+		{
+			mutate({ email: login, password, full_name: name }, {
+				onSuccess: (data) =>
+				{
+					navigate && navigate('/');
+				},
+				onError: (error) =>
+				{
+					setError(true);
+				}
+			});
+		}
 	}
 
 	return (
@@ -92,20 +99,8 @@ const InputFields = ({ setAuthenticated }) =>
 			<div className="input-box col-12 mb-3">
 				<img src="assets/email.svg" alt="" />
 				<input id="name" className="form-login w-100" placeholder="Nome"
-					value={login} onChange={(e) => setLogin(e.target.value)}
-					onKeyDown={() => { error && setError(false); setErrorAuthorization(false) }} />
-			</div>
-			<div className="input-box col-12 mb-3">
-				<img src="assets/email.svg" alt="" />
-				<input id="age" className="form-login w-100" placeholder="Idade"
-					value={login} onChange={(e) => setLogin(e.target.value)}
-					onKeyDown={() => { error && setError(false); setErrorAuthorization(false) }} />
-			</div>
-			<div className="input-box col-12 mb-3">
-				<img src="assets/email.svg" alt="" />
-				<input id="country" className="form-login w-100" placeholder="País"
-					value={login} onChange={(e) => setLogin(e.target.value)}
-					onKeyDown={() => { error && setError(false); setErrorAuthorization(false) }} />
+					value={name} onChange={(e) => setName(e.target.value)}
+				/>
 			</div>
 			<div className="input-box col-12 mb-3">
 				<img src="assets/chave.svg" alt="" />
