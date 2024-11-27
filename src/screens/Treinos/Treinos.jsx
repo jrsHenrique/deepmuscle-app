@@ -7,14 +7,8 @@ import Loading from "../../components/Loading.jsx";
 import uniq from "lodash/uniq";
 
 const Treinos = () => {
-  const treinosDoDia = [
-    { exercicio: "Supino Reto", series: 3, repeticoes: "10-12" },
-    { exercicio: "Rosca Direta", series: 4, repeticoes: "8-10" },
-    { exercicio: "Agachamento Livre", series: 4, repeticoes: "12-15" },
-    { exercicio: "Levantamento Terra", series: 3, repeticoes: "10-12" },
-    { exercicio: "Desenvolvimento Militar", series: 3, repeticoes: "10-12" },
-    { exercicio: "Cadeira Extensora", series: 4, repeticoes: "12-15" },
-  ];
+  const [selectedWorkout, setSelectedWorkout] = React.useState(null);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   const { show, hide, visible } = useShow();
   const { data: userInfo, isLoading: isLoadingInfo } = useGet({
@@ -41,42 +35,53 @@ const Treinos = () => {
         next_workouts.push(data[day]);
       }
     });
+  const handleShowModal = (workout) => {
+    setSelectedWorkout(workout);
+    setModalVisible(true);
+  };
+
+  const handleHideModal = () => {
+    setModalVisible(false);
+    setSelectedWorkout(null);
+  };
+
   return (
     <Loading isLoading={isLoading} skeleton={{ height: 500 }}>
       {next_workouts && (
         <section className="treinos">
-          {next_workouts.map(
-            (workout, idx) =>
-              workout && (
-                <section className="treino-card d-flex flex-column" key={idx}>
-                  <span className="item-up item-date">
-                    {today.addDays(idx).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                    })}
-                  </span>
-                  {/* <div className="d-flex justify-content-center mt-1 mb-1 item-card">
-              </div> */}
-                  {uniq(workout.map((e) => e.category)).map((category, idx) => (
-                    <span key={idx} className="item-up text-center">
-                      {category}
-                    </span>
-                  ))}
-                  <span className="d-flex align-items-center">
-                    <img src="assets/dumbbell_white.svg" width={15} />
-                    <span className="details-button" onClick={show}>
-                      Mais detalhes
-                    </span>
-                    <ModalDetalhes
-                      treinos={workout}
-                      show={visible}
-                      onHide={hide}
-                    />
-                  </span>
-                </section>
-              )
-          )}
+          {next_workouts.map((workout, idx) => (
+            <section className="treino-card d-flex flex-column" key={idx}>
+              <span className="item-up item-date">
+                {today.addDays(idx).toLocaleDateString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}
+              </span>
+              {uniq(workout.map((e) => e.category)).map((category, idx) => (
+                <span key={idx} className="item-up text-center">
+                  {category}
+                </span>
+              ))}
+              <span className="d-flex align-items-center">
+                <img src="assets/dumbbell_white.svg" width={15} />
+                <span
+                  className="details-button"
+                  onClick={() => handleShowModal(workout)}
+                >
+                  Mais detalhes
+                </span>
+              </span>
+            </section>
+          ))}
         </section>
+      )}
+
+      {selectedWorkout && (
+        <ModalDetalhes
+          show={modalVisible}
+          onHide={handleHideModal}
+          treinos={selectedWorkout}
+        />
       )}
     </Loading>
   );
