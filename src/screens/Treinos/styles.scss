@@ -5,12 +5,17 @@
 	// flex-direction: column;
 	flex-wrap: wrap;	
 	gap: 5px;
+	margin-bottom: 20px;
 
 	.treino-card {
 		width: 49%;
 		padding: 6px;
 		color: #F5F5F5;
-		margin-top: 40px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-top: 30px;
 		border-radius: 30px;
 		background-color: rgba(101, 145, 181, .63);
 
@@ -34,7 +39,7 @@
 			border-radius: 15px;
 			color: #F5F5F5;
 			font-size: medium;
-			min-width: 60px;
+			width: 40%;
 			height: 32px;
 			text-align: center;
 		}

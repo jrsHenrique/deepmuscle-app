@@ -18,7 +18,7 @@ import {
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from "react-icons/md";
 import Bg from "/assets/bg-image.png";
 import { useSelector, useDispatch } from "react-redux";
-import { addMessage } from "../../../store/aiMessage";
+import { addMessage, aiMessage } from "../../../store/aiMessage";
 import { uptadeMessage } from "../../../store/humanMessage";
 
 const ChatBox = () => {
@@ -96,31 +96,6 @@ const ChatBox = () => {
       }
     };
 
-    // xhttp.onprogress = function () {
-    //   console.log(xhttp.response);
-    //   var responseText = xhttp.response.substr(last_response_len);
-    //   const events = responseText.split("\r\n\r\n").filter((a) => a !== "");
-    //   events.forEach((event) => {
-    //     const event_list = event.split("\r\n");
-    //     const event_type = event_list[0].split(": ")[1];
-    //     const data = event_list[1] ? event_list[1].split(": ")[1] : null;
-    //     if (event_type === "end") {
-    //       // console.log(outputCodeLocal);
-    //       dispatch(addMessage({ message: outputCodeLocal + "\n\n" }));
-    //       setOutputCode((cur) => cur + "\n\n");
-    //       setLoading(false);
-    //       // console.log("End of conversation");
-    //       abortRequest();
-    //       return;
-    //     }
-    //     if (event_type === "data") {
-    //       setLoading(true);
-    //       const modifiedData = data.slice(1, -1);
-    //       outputCodeLocal += modifiedData;
-    //       updateCallback(data);
-    //     }
-    //   });
-    // };
     xhttp.onerror = function () {
       setLoading(false);
       xhttp.abort();
@@ -132,7 +107,15 @@ const ChatBox = () => {
     xhttp.open("POST", "http://127.0.0.1:8000/rag_conversation/stream", true);
     setLoading(true);
     xhttp.send(
-      JSON.stringify({ input: { chat_history: [], question: inputCode } })
+      JSON.stringify({
+        input: {
+          chat_history: messages[messages.length - 1]
+            ? [[hMessage, messages[messages.length - 1].message]]
+            : [],
+          // chat_history: [],
+          question: inputCode,
+        },
+      })
     );
   }
 

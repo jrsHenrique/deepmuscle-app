@@ -10,28 +10,18 @@ import "./styles.scss";
 import NavbarBaseV1 from "./Navbar";
 import CardAccount from "./CardAccount";
 
-
-
-const Navbar = () =>
-{
-	const navigate = useNavigate()
-	const queryParams = useLocation().search
-	const isLoading = useDummyRequest()
-
-
-	return (
-		<>
-			<Container topNav={false} background={true}>
-				<div className="home-page w-100 d-flex flex-column align-items-center">
-					<Loading skeleton={{ height: 150 }} isLoading={isLoading}>
-					</Loading>
-					<CardAccount />
-					<NavbarBaseV1 />
-					<Outlet />
-				</div>
-			</Container>
-		</>
-	)
-}
+const Navbar = (setAuthenticated) => {
+  return (
+    <>
+      <Container topNav={false} background={true}>
+        <div className="home-page w-100 d-flex flex-column align-items-center">
+          <CardAccount setAuthenticated={setAuthenticated} />
+          <NavbarBaseV1 />
+          <Outlet />
+        </div>
+      </Container>
+    </>
+  );
+};
 
 export default Navbar;

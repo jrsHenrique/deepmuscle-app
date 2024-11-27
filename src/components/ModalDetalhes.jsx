@@ -1,17 +1,15 @@
 import Modal from "react-bootstrap/Modal";
 
-export const ModalDetalhes = ({ show, onHide, description, treinos }) => {
-	  
-
+export const ModalDetalhes = ({ show, onHide, treinos }) => {
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Body className="modal-descricao">
         {/* Descrição do Treino */}
         <div className="text-block mb-4">
           <h5 className="text-title">Descrição do Treino</h5>
-          <p className="text-content">
-            {description || "Descrição geral do treino não disponível."}
-          </p>
+          {/* <p className="text-content">
+            {treinos.description || "Descrição geral do treino não disponível."}
+          </p> */}
         </div>
 
         {/* Tabela com os Treinos */}
@@ -28,9 +26,9 @@ export const ModalDetalhes = ({ show, onHide, description, treinos }) => {
               <tbody>
                 {treinos.map((treino, index) => (
                   <tr key={index}>
-                    <td>{treino.exercicio}</td>
+                    <td>{treino.name}</td>
                     <td>{treino.series}</td>
-                    <td>{treino.repeticoes}</td>
+                    <td>{treino.reps}</td>
                   </tr>
                 ))}
               </tbody>
@@ -41,11 +39,9 @@ export const ModalDetalhes = ({ show, onHide, description, treinos }) => {
         )}
 
         {/* Botão OK */}
-        <div className="d-flex justify-content-center mt-4">
-          <button className="btn-modal bg-blue white w-50" onClick={onHide}>
-            OK
-          </button>
-        </div>
+        <button className="btn-modal bg-blue white w-25" onClick={onHide}>
+          OK
+        </button>
       </Modal.Body>
     </Modal>
   );
