@@ -334,11 +334,11 @@
 	font-style: normal;
 }
 
-// @font-face {
-//   font-family: "Poppins-Regular";
-//   src: local("Poppins-Medium"), url("assets/Poppins/Poppins-Regular.ttf") format("truetype");
-//   font-style: normal;
-// }
+@font-face {
+  font-family: "Poppins-Regular";
+  src: local("Poppins-Medium"), url("assets/Poppins/Poppins-Regular.ttf") format("truetype");
+  font-style: normal;
+}
 
 html {
 	padding: 0;
@@ -347,6 +347,7 @@ html {
 }
 
 body {
+	font-family: "Poppins";
 	background-color: inherit;
 }
 
