@@ -10,7 +10,8 @@ import * as React from "react";
 
 export const axiosDefaults = Axios.defaults;
 
-Axios.defaults.baseURL = "http://127.0.0.1:8000/";
+// Axios.defaults.baseURL = "http://127.0.0.1:8000/";
+Axios.defaults.baseURL = "https://deepmuscle-app-api.onrender.com/";
 
 export function useShow(defaultVisibility = false) {
   const [visible, setVisible] = useState(defaultVisibility);
