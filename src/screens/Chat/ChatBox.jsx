@@ -104,7 +104,11 @@ const ChatBox = () => {
       setLoading(false);
       xhttp.abort();
     };
-    xhttp.open("POST", "http://127.0.0.1:8000/rag_conversation/stream", true);
+    xhttp.open(
+      "POST",
+      "https://deepmuscle-app-api.onrender.com/rag_conversation/stream",
+      true
+    );
     setLoading(true);
     xhttp.send(
       JSON.stringify({
