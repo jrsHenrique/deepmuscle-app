@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from "@testing-library/react";
-import ChatBox from "../src/components/ChatBox";
+import ChatBox from "../src/screens/Chat/ChatBox";
 
 test("renders ChatBox and handles user input", () => {
   render(<ChatBox />);

@@ -1,11 +1,13 @@
-// jest.config.cjs
 module.exports = {
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\.jsx?$': 'babel-jest',
   },
   testEnvironment: 'jsdom',
   extensionsToTreatAsEsm: ['.jsx'],
   moduleNameMapper: {
-    '^(.+)\\.js$': '$1',
+    '\.(css|scss)$': 'identity-obj-proxy'
   },
+  transformIgnorePatterns: [
+    "/node_modules/(?!react-markdown|devlop)" 
+  ],
 };
